@@ -1,0 +1,117 @@
+# When running in terminal, make sure to use screen command so that you the process can continue even when you get disconnected
+# NOTE: not necessary if working through VNC Viewer
+screen -r $SCREEN.ID
+
+### In BioHPC, load necessary packages
+export PYTHONPATH=/programs/pybedtools/lib64/python2.7/site-packages
+source /programs/bin/util/setup_macs2.sh
+export PATH=/programs/snATAC/bin:$PATH
+export PATH=$PATH:/home/pds28/Jeewon/sciATAC/snATAC_pipeline/bin/ 
+
+### decomplex the read files : [USAGE] scATAC_debarcode -a I1_FILE -b I2_FILE -c R1/R2 file
+#example)
+scATAC_debarcode -a 73319_H2CCJAFXY_Plate1_4_S1_I1_001.fastq.gz -b 73319_H2CCJAFXY_Plate1_4_S1_I2_001.fastq.gz -c 73319_H2CCJAFXY_Plate1_4_S1_R1_001.fastq.gz | gzip - > 20180503_snATAC_decomplex.R1.fastq.gz
+scATAC_debarcode -a 73319_H2CCJAFXY_Plate1_4_S1_I1_001.fastq.gz -b 73319_H2CCJAFXY_Plate1_4_S1_I2_001.fastq.gz -c 73319_H2CCJAFXY_Plate1_4_S1_R1_001.fastq.gz | gzip - > 20180503_snATAC_decomplex.R2.fastq.gz
+
+### Run the scATAC (location: /home/pds28/Jeewon/sciATAC/snATAC_pipeline/bin/)
+# example)
+scATAC -t 40 -f p56.rep1.R1.decomplex.fastq.gz -r p56.rep1.R2.decomplex.fastq.gz \
+                -b /home/pds28/Jeewon/sciATAC/snATAC/barcodes/ \
+                -d 2 -p '/programs/picard-tools-2.8.2/picard.jar MarkDuplicates' \
+                -n p56.rep1 \
+                -g /local/local_data/Mus_musculus_UCSC_mm10/Bowtie2Index/genome \
+                -m 500 > p56.rep1.log
+
+
+# Will take <<$PREFIX\_tmp/$PREFIX.umap.corrected.bam>> and run it through the full pipeline introduced in r3fang/snATAC. 
+
+## pre processing!
+snATAC/bin/snATAC pre -t 5 -m 30 -f 2000 -e 75 \
+                   -i test_ATAC.nsrt.corrected.bam \
+                   -o test_ATAC.bed.gz 2> test_ATAC.pre.log
+
+ macs2 callpeak -t test_ATAC.bed.gz \
+                 -f BED -n test_ATAC \
+                 -g mm -p 0.05 \
+                 --nomodel --shift 150 \
+                 --keep-dup all
+
+## Barcode Statistics
+
+zcat test_ATAC.bed.gz | awk '{print $4}' \
+               | sort \
+               | uniq -c \
+               | awk '{print $2, $1}' \
+               | sort -k1,1 > test_ATAC.reads_per_cell
+
+### this part always throws weird error for me when I was trying to copy & paste (for no reason), so I usually just copy up to sort\, press enter, and copy the rest of the code...
+intersectBed -wa -wb \
+               -a test_ATAC.bed.gz \
+               -b mm10_consecutive_promoters.bed \
+               | awk '{print $4, $8}' \
+               | sort \
+               | uniq \
+               | awk '{print $1}' \
+               | uniq -c \
+               | awk '{print $2, $1}' \
+               | sort -k1,1 > test_ATAC.promoter_cov
+
+intersectBed -a test_ATAC.bed.gz -b p56.rep1.narrowPeak -u \
+               | awk '{print $4}' \
+               | sort \
+               | uniq -c \
+               | awk '{print $2, $1}' \
+               | sort -k1,1 - > test_ATAC.p56peaks.reads_in_peak
+
+'''
+GO TO snATAC_barcode_feature.R, then using these 3 files from above, obtain xgi & ygi files (format of xgi : a list of barcodes / ygi : Chr Start End +@ )
+Most recent update on 2kb_tiled genome doesn't require obtaining ygi, I just made a 2kb_tiled genome file. (make sure to exclude the blacklist regions of the specific genome as well using bedops -n 1 in.bed not.bed)
+'''
+
+### :::NOTE::: the bmat function specifies the column # to use as the counts, regardless of how many columns there are in ygi file.
+### I need to change the code so that I don't have to manually reset the column number (= ncol of -i file + ncol of -y file)
+snATAC bmat -i p56.rep1.bed.gz \
+            -x p56.rep1.xgi \
+            -y p56.distal.ygi \ # or the 2kb_genome file
+            -o p56.rep1_refSeq_distal.mat
+
+### get number of row for bmat
+wc -l p56.rep1.xgi 
+
+### get number of columns for bmat
+wc -l p56.distal.ygi
+
+snATAC jacard -i p56.rep1_refSeq_distal.mat \
+              -x 4600 \ # number of rows (barcodes)
+              -y 182362 \ # number of columns (features)
+              -o p56.rep1_refSeq_distal.jacard
+
+'''
+Take this jacard matrix to snATAC_tsne.R file. 
+Try different perplexities for tsne and see which gives the best result. 
+Change between plot / scatterplot3d depending on the k=2 / k=3 where k is just the number of dimension.
+This R script will give back cluster information at the end.
+
+In order to visualize the library of the separate clusters in genome browser, just use cluster.ipynb to make *.barcode file with full directory to individual cells
+'''
+
+export PATH=/programs/deeptools/bin:$PATH
+export PYTHONPATH=/programs/deeptools/lib64/python2.7/site-packages:/programs/deeptools/lib/python2.7/site-packages:$PYTHONPATH
+
+### With the barcodes, merge them into one big cluster bam files
+# example)        
+for sample in 2kb.*.barcodes; do
+  samtools merge -r -b ${sample} ${sample%.*}.bam
+  samtools index ${sample%.*}.bam
+done
+
+### Make BigWig files
+# example) 
+for sample in 2kb.*.bam; do 
+  if [ ! -f ${sample%.*}.bw ]; then
+    cat ${sample} | bamCoverage --bam ${sample} -o ${sample%.*}.bw --binSize 1 --normalizeUsing RPKM --ignoreForNormalization chrM --numberOfProcessors "max" ;
+  fi
+done
+
+### To look at specific motifs, open chromVAR.R file.
+### REQUIRED INPUT FOR CHROMVAR: peakfile, bamfiles, colData (I usually include cluster information here)
