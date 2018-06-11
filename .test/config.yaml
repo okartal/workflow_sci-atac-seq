@@ -1,0 +1,11 @@
+# This file should contain everything to configure the workflow on a global scale.
+# In case of sample based data, it should be complemented by a samples.tsv file that contains
+# one row per sample. It can be parsed easily via pandas.
+data:
+  fastq_pe:
+    read1: ".test/data/subsample_74936_H2LKNAFXY_10397914_10395442_S1_R1_001.fastq.gz"
+    read2: ".test/data/subsample_74936_H2LKNAFXY_10397914_10395442_S1_R2_001.fastq.gz"
+    index1: ".test/data/subsample_74936_H2LKNAFXY_10397914_10395442_S1_I1_001.fastq.gz"
+    index2: ".test/data/subsample_74936_H2LKNAFXY_10397914_10395442_S1_I2_001.fastq.gz"
+params:
+    index_readlength: 16
