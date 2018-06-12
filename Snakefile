@@ -12,4 +12,4 @@ rule all:
         # Subsequent target rules can be specified below. They should start with all_*.
 
 
-include: "rules/filter_fastq.smk"
+include: "rules/prepare_fastq.smk"

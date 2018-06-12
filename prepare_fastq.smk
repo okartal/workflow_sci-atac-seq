@@ -10,8 +10,6 @@ rule prepare_fastqpe:
         index2 = config["data"]["fastq_pe"]["index2"]
     output:
         ".test/results/fragments.tsv"
-    params:
-         failseq = config['params']['index_readlength'] * 'N'
     benchmark:
         ".test/benchmarks/prepare_fastqpe/fragments.tsv"
     shell:
@@ -20,6 +18,5 @@ rule prepare_fastqpe:
         " <(gunzip -c {input.read2} | paste - - - - | cut -f2,4 )"
         " <(gunzip -c {input.index1} | paste - - - - | cut -f2,4 )"
         " <(gunzip -c {input.index2} | paste - - - - | cut -f2,4 )"
-        " | grep -v {params.failseq}"
         " | awk -F'\t' '{{sub(/ .*$/, \"\", $1); print}}'"
         " > {output}"
