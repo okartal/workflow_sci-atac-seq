@@ -24,7 +24,8 @@ rule all_results:
     input:
         expand('results/nextseq_multiplex_{read}{number}.filtered.fastq',
             read=['I', 'R'], number=[1, 2]),
-        'results/nextseq_multiplex_barcode-clusters.tsv'
+        'results/nextseq_multiplex_barcode-clusters.tsv',
+        'results/nextseq_multiplex_barcode-clusters_counts.csv'
         
 rule all_reports:
     input:
@@ -37,3 +38,4 @@ rule all_reports:
 # include: "rules/fastq_filter.smk"i
 include: 'rules/fastp_pe.smk'
 include: 'rules/starcode.smk'
+include: 'rules/count_clusters.smk'
