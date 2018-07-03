@@ -1,5 +1,9 @@
 rule starcode:
-    """Clustering read pairs by alignment and Levenshtein distance. 
+    """Clustering read pairs by alignment and Levenshtein distance.
+
+    The edit distance parameter applies to the pair, not to each mate
+    separately. For example -d4 means that the sum of edits in both mates has to
+    be lower than 4 to group two pairs of sequences together.
     """
     input:
         fq1='results/{unit}_{sample}_I1.filtered.fastq',
