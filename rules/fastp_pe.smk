@@ -2,8 +2,8 @@ rule fastp_pe:
     input:
         lambda wildcards: units.loc[wildcards.unit, [wildcards.read + i for i in '12']]
     output:
-        fq1='results/{unit}_{sample}_{read}1.filtered.fastq',
-        fq2='results/{unit}_{sample}_{read}2.filtered.fastq',
+        fq1='results/{unit}_{sample}_{read}1.post-qc.fastq',
+        fq2='results/{unit}_{sample}_{read}2.post-qc.fastq',
         json='reports/fastp/{unit}_{sample}_{read}.json',
         html='reports/fastp/{unit}_{sample}_{read}.html'
     params:

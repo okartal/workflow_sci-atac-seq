@@ -6,8 +6,8 @@ rule starcode:
     be lower than 4 to group two pairs of sequences together.
     """
     input:
-        fq1='results/{unit}_{sample}_I1.filtered.fastq',
-        fq2='results/{unit}_{sample}_I2.filtered.fastq'
+        fq1='results/{unit}_{sample}_I1.post-qc.fastq',
+        fq2='results/{unit}_{sample}_I2.post-qc.fastq'
     output: 'results/{unit}_{sample}_barcode-clusters.tsv'
     log: 'logs/starcode/{unit}_{sample}_barcode-clusters.log'
     params: config['params']['starcode']
