@@ -3,7 +3,7 @@
 # one row per sample. It can be parsed easily via pandas.
 samples: sample.csv
 units: unit.csv
-link: link.csv
+sample-unit: sample-unit.csv
 
 ref:
   annotation:
@@ -12,7 +12,7 @@ ref:
 
 params:
   fastp:
-    I: "-A -p -n 7 -l 16 -P 20"
+    I: "-A -p -n 4 -l 16 -P 20 -Y 50"
     R: "-c -p"
   starcode: "-d4 --seq-id"
   

@@ -7,7 +7,7 @@ rule fastp_pe:
         json='reports/fastp/{unit}_{sample}_{read}.json',
         html='reports/fastp/{unit}_{sample}_{read}.html'
     params:
-        lambda wildcards: config['params']['fastp'][wildcards.read] + " -R 'fastp report for samples {}'".format(",".join(link[link.unit == 'nextseq']['sample']))
+        lambda wildcards: config['params']['fastp'][wildcards.read] + " -R 'fastp report for samples {}'".format(",".join(sample_unit[sample_unit.unit == 'nextseq']['sample']))
     threads: config['threads']['fastp']
     benchmark:
         'benchmarks/fastp/{unit}_{sample}_{read}.tsv'

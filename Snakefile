@@ -15,7 +15,7 @@ samples = pd.read_csv(config['samples'], index_col='id')
 units = pd.read_csv(config['units'], index_col='id')
 # validate(units, schema="schemas/units.schema.yaml")
 
-link = pd.read_csv(config['link'])
+sample_unit = pd.read_csv(config['sample-unit'])
 # validate(link, schema="schemas/link.schema.yaml")
 
 ##### target rules #####
