@@ -3,7 +3,21 @@
 [![Snakemake](https://img.shields.io/badge/snakemake-≥3.12.0-brightgreen.svg)](https://snakemake.bitbucket.io)
 [![Build Status](https://travis-ci.org/snakemake-workflows/workflow_atac-seq.svg?branch=master)](https://travis-ci.org/snakemake-workflows/workflow_atac-seq)
 
-This is a workflow to process and visualize sequencing data from single-cell combinatorially indexed ATAC-seq libraries. The workflow re-implements and develops further a [pipeline](https://github.com/jy634/soloway_snATAC) that is currently in use in the lab of Paul D. Soloway (Cornell University).
+This workflow processes data from combinatorially indexed ATAC-seq libraries.
+
+* QC on insert and index reads
+* Processing reads
+  * align insert reads to reference genome
+  * cluster index reads into consensus sequence groups
+* Demultiplex and filter alignment
+* cell profiling
+  * signal peak extraction
+  * nucleosome positioning
+  * transcription factor binding
+  * cell classification
+* population profiling
+  * diversity
+  * clustering
 
 ## Authors
 
