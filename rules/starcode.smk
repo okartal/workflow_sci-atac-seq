@@ -6,12 +6,13 @@ rule starcode:
     be lower than 4 to group two pairs of sequences together.
     """
     input:
-        fq1='results/{unit}_{sample}_I1.post-qc.fastq',
-        fq2='results/{unit}_{sample}_I2.post-qc.fastq'
-    output: 'results/{unit}_{sample}_barcode-clusters.tsv'
-    log: 'logs/starcode/{unit}_{sample}_barcode-clusters.log'
+        fq1='results/{unit}_I1_post-qc.fastq',
+        fq2='results/{unit}_I2_post-qc.fastq'
+    output: 'results/{unit}_clusters.tsv'
     params: config['params']['starcode']
     threads: config['threads']['starcode']
+    log: 'results/logs/starcode/{unit}_clusters.log'
+    benchmark: 'results/benchmarks/starcode/{unit}_clusters.tsv'
     shell:
         "starcode {params} -t {threads} -1 {input.fq1} -2 {input.fq2}"
         " > {output} 2> {log}"

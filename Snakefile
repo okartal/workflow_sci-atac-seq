@@ -20,17 +20,13 @@ sample_unit = pd.read_csv(config['sample-unit'])
 
 ##### target rules #####
 
-rule all_results:
+rule all:
     input:
-        expand('results/nextseq_multiplex_{read}{number}.post-qc.fastq',
-            read=['I', 'R'], number=[1, 2]),
-        'results/nextseq_multiplex_barcode-clusters.tsv',
-        'results/nextseq_multiplex_barcode-clusters_count.csv'
-        
-rule all_reports:
-    input:
-        expand('reports/fastp/nextseq_multiplex_{read}.{file}',
-            read=['I', 'R'], file=['html', 'json'])
+        expand('results/nextseq_{read}1_post-qc.fastq', read=['I', 'R']),
+        expand('results/nextseq_{read}2_post-qc.fastq', read=['I', 'R']),
+        expand('results/nextseq_{read}_report.{fmt}', read=['I', 'R'], fmt=['json', 'html']),
+        'results/nextseq_clusters.tsv',
+        'results/nextseq_clustercount.csv'
 
 ##### workflow rules #####
 
