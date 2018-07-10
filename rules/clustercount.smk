@@ -3,6 +3,7 @@ rule clustercount:
     """
     input: 'results/{unit}_clusters.tsv'
     output: 'results/{unit}_clustercount.csv'
+    benchmark: 'results/benchmarks/clustercount/{unit}_clustercount.tsv'
     shell:
         "cut -f2 {input} | sort -n | uniq -c"
         " | sed -e '1i\\\ncount,size' -e 's/ *//' -e 's/ /,/' "
