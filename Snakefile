@@ -9,13 +9,13 @@ from snakemake.utils import validate, min_version
 configfile: 'config.yaml'
 # validate(config, schema="schemas/config.schema.yaml")
 
-samples = pd.read_csv(config['samples'], index_col='id')
+samples = pd.read_csv(config['data']['samples'], index_col='id')
 # validate(samples, schema="schemas/samples.schema.yaml")
 
-units = pd.read_csv(config['units'], index_col='id')
+units = pd.read_csv(config['data']['units'], index_col='id')
 # validate(units, schema="schemas/units.schema.yaml")
 
-sample_unit = pd.read_csv(config['sample-unit'])
+sample_unit = pd.read_csv(config['data']['sample-unit'])
 # validate(link, schema="schemas/link.schema.yaml")
 
 ##### target rules #####

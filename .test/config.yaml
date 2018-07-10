@@ -1,9 +1,12 @@
 # This file should contain everything to configure the workflow on a global scale.
 # In case of sample based data, it should be complemented by a samples.tsv file that contains
 # one row per sample. It can be parsed easily via pandas.
-samples: sample.csv
-units: unit.csv
-sample-unit: sample-unit.csv
+data:
+  barcodes: data/barcode.csv
+  samples: data/sample.csv
+  units: data/unit.csv
+  sample-barcode: data/sample-barcode.csv
+  sample-unit: data/sample-unit.csv
 
 ref:
   annotation:
