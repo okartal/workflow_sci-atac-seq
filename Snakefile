@@ -22,11 +22,11 @@ sample_unit = pd.read_csv(config['data']['sample-unit'])
 
 rule all:
     input:
-        expand('results/nextseq_{read}1_post-qc.fastq', read=['I', 'R']),
-        expand('results/nextseq_{read}2_post-qc.fastq', read=['I', 'R']),
-        expand('results/nextseq_{read}_report.{fmt}', read=['I', 'R'], fmt=['json', 'html']),
-        'results/nextseq_clusters.tsv',
-        'results/nextseq_clustercount.csv'
+        expand('results/{unit}_{read}1_post-qc.fastq', unit=units.index.values, read=['I', 'R']),
+        expand('results/{unit}_{read}2_post-qc.fastq', unit=units.index.values, read=['I', 'R']),
+        expand('results/{unit}_{read}_report.{fmt}', unit=units.index.values, read=['I', 'R'], fmt=['json', 'html']),
+        expand('results/{unit}_clusters.tsv', unit=units.index.values),
+        expand('results/{unit}_clustercount.csv', unit=units.index.values)
 
 ##### workflow rules #####
 
