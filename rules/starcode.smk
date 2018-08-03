@@ -11,8 +11,8 @@ rule starcode:
     output: 'results/{unit}_clusters.tsv'
     params: config['params']['starcode']
     threads: config['threads']['starcode']
-    log: 'results/logs/starcode/{unit}_clusters.log'
     benchmark: 'results/benchmarks/starcode/{unit}_clusters.tsv'
     shell:
         "starcode {params} -t {threads} -1 {input.fq1} -2 {input.fq2}"
-        " > {output} 2> {log}"
+        " | grep -v N"
+        " > {output}"
