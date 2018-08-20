@@ -17,8 +17,10 @@ params:
   fastp:
     I: "-A -p -n 4 -l 16 -P 20 -Y 50"
     R: "-c -p"
-  starcode: "-d4 --seq-id"
-  
+  cluster_reads:
+    starcode: "-d4 --seq-id"
+    min reads per cluster: 20
+
 threads:
   fastp: 2
   starcode: 4

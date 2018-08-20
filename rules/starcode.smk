@@ -1,4 +1,4 @@
-rule starcode:
+rule cluster_reads:
     """Clustering read pairs by alignment and Levenshtein distance.
 
     The edit distance parameter applies to the pair, not to each mate
@@ -11,7 +11,8 @@ rule starcode:
     output:
         "results/{unit}_clusters.tsv"
     params:
-        config['params']['starcode']
+        starcode=config['params']['cluster_reads']['starcode'],
+        minreads=config['params']['cluster_reads']['min reads per cluster']
     threads:
         config['threads']['starcode']
     benchmark:
@@ -19,6 +20,7 @@ rule starcode:
     conda:
         "../envs/sci-atac.yml"
     shell:
-        "starcode {params} -t {threads} -1 {input.fq1} -2 {input.fq2}"
-        " | grep -v N"
+        "starcode {params.starcode} -t {threads}"
+        " -1 {input.fq1} -2 {input.fq2}"
+        " | awk '{{ if($1~/N/ || $2<{params.minreads}) next; print }}'"
         " > {output}"
