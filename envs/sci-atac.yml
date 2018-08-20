@@ -1,0 +1,8 @@
+# conda environments needed for the workflow should be stored here.
+name:
+  sci-atac
+channels:
+  - bioconda
+dependencies:
+  - fastp
+  - starcode
