@@ -20,7 +20,10 @@ params:
   starcode: "-d4 --seq-id"
   clustering:
     qc min reads: 20
+  bwa:
+    index: "~/genomes/Mus_musculus_UCSC_mm10/BWAIndex/genome"
 
 threads:
   fastp_pe: 2
   starcode: 4
+  bwa_mem: 4

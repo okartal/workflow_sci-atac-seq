@@ -27,7 +27,9 @@ rule all:
         expand('results/{unit}_{read}_qc-report.{fmt}', unit=units.index.values, read=['I', 'R'], fmt=['json', 'html']),
         expand('results/{unit}_I_clusters.tsv', unit=units.index.values),
         expand('results/{unit}_I_clusters_qc.tsv', unit=units.index.values),
-        expand('results/{unit}_I_clusters_count.csv', unit=units.index.values)
+        expand('results/{unit}_I_clusters_count.csv', unit=units.index.values),
+        expand('results/{unit}.bam', unit=units.index.values)
+
 
 ##### workflow rules #####
 
@@ -35,3 +37,4 @@ include: 'rules/fastp_pe.smk'
 include: 'rules/starcode.smk'
 include: 'rules/clustering_qc.smk'
 include: 'rules/clustering_count.smk'
+include: 'rules/bwamem.smk'
