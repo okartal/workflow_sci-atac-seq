@@ -14,13 +14,13 @@ ref:
   index:
 
 params:
-  fastp:
+  fastp_pe:
     I: "-A -p -n 4 -l 16 -P 20 -Y 50"
     R: "-c -p"
-  cluster_reads:
-    starcode: "-d4 --seq-id"
-    min reads per cluster: 20
+  starcode: "-d4 --seq-id"
+  clustering:
+    qc min reads: 20
 
 threads:
-  fastp: 2
+  fastp_pe: 2
   starcode: 4

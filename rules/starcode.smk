@@ -1,4 +1,4 @@
-rule cluster_reads:
+rule starcode:
     """Clustering read pairs by alignment and Levenshtein distance.
 
     The edit distance parameter applies to the pair, not to each mate
@@ -6,21 +6,21 @@ rule cluster_reads:
     be lower than 4 to group two pairs of sequences together.
     """
     input:
-        fq1="results/{unit}_I1_post-qc.fastq",
-        fq2="results/{unit}_I2_post-qc.fastq"
+        fq1="results/{unit}_I1_qc.fastq",
+        fq2="results/{unit}_I2_qc.fastq"
     output:
-        "results/{unit}_clusters.tsv"
+        "results/{unit}_I_clusters.tsv"
     params:
-        starcode=config['params']['cluster_reads']['starcode'],
-        minreads=config['params']['cluster_reads']['min reads per cluster']
+        config['params']['starcode']
     threads:
         config['threads']['starcode']
     benchmark:
-        "results/benchmarks/starcode/{unit}_clusters.tsv"
+        "results/benchmarks/starcode/{unit}_I_clusters.tsv"
+    log:
+        "results/logs/starcode/{unit}_I_clusters.log"
     conda:
-        "../envs/sci-atac.yml"
+        "../envs/sci-atac.yaml"
     shell:
-        "starcode {params.starcode} -t {threads}"
-        " -1 {input.fq1} -2 {input.fq2}"
-        " | awk '{{ if($1~/N/ || $2<{params.minreads}) next; print }}'"
-        " > {output}"
+        "starcode {params} -t {threads}"
+        " -1 {input.fq1} -2 {input.fq2} > {output}"
+        " 2> {log}"
