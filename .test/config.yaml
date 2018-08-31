@@ -9,9 +9,9 @@ data:
   sample-unit: data/sample-unit.csv
 
 ref:
-  annotation:
-  assembly:
-  index:
+  seq: "~/data/Mus_musculus_UCSC_mm10/WholeGenomeFasta/genome.fa"
+  gtf: "~/data/Mus_musculus_UCSC_mm10/genes.gtf"
+  gff:
 
 params:
   fastp_pe:
@@ -20,10 +20,13 @@ params:
   starcode: "-d4 --seq-id"
   clustering:
     qc min reads: 20
-  bwa:
-    index: "~/genomes/Mus_musculus_UCSC_mm10/BWAIndex/genome"
+  bwa_mem:
+    index: "~/data/Mus_musculus_UCSC_mm10/BWAIndex/genome.fa"
+    sort: "samtools"
+    sort_order: "queryname"
+    sort_extra: ""
 
 threads:
-  fastp_pe: 2
+  fastp_pe: 4 # max. 16
   starcode: 4
   bwa_mem: 4

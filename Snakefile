@@ -28,7 +28,7 @@ rule all:
         expand('results/{unit}_I_clusters.tsv', unit=units.index.values),
         expand('results/{unit}_I_clusters_qc.tsv', unit=units.index.values),
         expand('results/{unit}_I_clusters_count.csv', unit=units.index.values),
-        expand('results/{unit}.bam', unit=units.index.values)
+        expand('results/{unit}.sam', unit=units.index.values)
 
 
 ##### workflow rules #####
