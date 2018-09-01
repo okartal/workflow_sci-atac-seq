@@ -1,0 +1,32 @@
+# This file should contain everything to configure the workflow on a global scale.
+# In case of sample based data, it should be complemented by a samples.tsv file that contains
+# one row per sample. It can be parsed easily via pandas.
+data:
+  barcodes: data/barcode.csv
+  samples: data/sample.csv
+  units: data/unit.csv
+  sample-barcode: data/sample-barcode.csv
+  sample-unit: data/sample-unit.csv
+
+ref:
+  seq: "/shared_data/data/Mus_musculus_UCSC_mm10/WholeGenomeFasta/genome.fa"
+  gtf: "/shared_data/data/Mus_musculus_UCSC_mm10/genes.gtf"
+  gff:
+
+params:
+  fastp_pe:
+    I: "-A -p -n 4 -l 16 -P 20 -Y 50"
+    R: "-c -p"
+  starcode: "-d4 --seq-id"
+  clustering:
+    qc min reads: 1000
+  bwa_mem:
+    index: "/shared_data/data/Mus_musculus_UCSC_mm10/BWAIndex/genome.fa"
+    sort: "samtools"
+    sort_order: "queryname"
+    sort_extra: ""
+
+threads:
+  fastp_pe: 12 # max. 16
+  starcode: 12
+  bwa_mem: 12
