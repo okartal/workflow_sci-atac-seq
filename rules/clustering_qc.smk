@@ -8,5 +8,5 @@ rule clustering_qc:
     benchmark:
         "results/benchmarks/clustering_qc/{unit}_I_clusters_qc.tsv"
     shell:
-        "awk '{{ if($1~/N/ || $2<{params}) next; print }}' {input}"
+        "awk '{{OFS=\"\t\"}} {{ if($1~/N/ || $2<{params}) next; gsub(\"/\",\"\",$1); print }}' {input}"
         " > {output}"
