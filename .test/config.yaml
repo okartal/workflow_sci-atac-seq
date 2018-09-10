@@ -19,7 +19,7 @@ params:
     R: "-c -p"
   starcode: "-d4 --seq-id"
   clustering:
-    qc min reads: 20
+    qc min reads: 10
   bwa_mem:
     index: "~/data/Mus_musculus_UCSC_mm10/BWAIndex/genome.fa"
     sort: "samtools"
