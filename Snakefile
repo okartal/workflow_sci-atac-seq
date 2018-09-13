@@ -28,7 +28,8 @@ rule all:
         expand('results/{unit}_I_clusters.tsv', unit=units.index.values),
         expand('results/{unit}_I_clusters_qc.tsv', unit=units.index.values),
         expand('results/{unit}_I_clusters_count.csv', unit=units.index.values),
-        expand('results/{unit}.sam', unit=units.index.values)
+        expand('results/{unit}.sam', unit=units.index.values),
+        "results/cellbarcodes.tsv",
 
 
 ##### workflow rules #####
@@ -38,3 +39,4 @@ include: 'rules/starcode.smk'
 include: 'rules/clustering_qc.smk'
 include: 'rules/clustering_count.smk'
 include: 'rules/bwamem.smk'
+include: 'rules/cellbarcode.smk'
